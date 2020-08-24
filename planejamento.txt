@@ -1,0 +1,9 @@
+EPER: Entender, Planejar, Executar e Revisar.
+
+1° criar o projeto base. OK
+2° Criar as rotas que o sistema vai utilizar. OK
+3° Criar os componentes de cada pagina, mesmo que em brancos. OK
+4° Definir as cores do projeto.  (#25BDB1)
+
+
+
