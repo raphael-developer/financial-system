@@ -31,3 +31,13 @@ import Menu from '@/components/Menu.vue';
     },
   }
 </script>
+
+<style>
+
+.v-btn.v-btn--contained{
+  text-transform: none;
+}
+
+
+
+</style>

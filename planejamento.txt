@@ -3,7 +3,18 @@ EPER: Entender, Planejar, Executar e Revisar.
 1° criar o projeto base. OK
 2° Criar as rotas que o sistema vai utilizar. OK
 3° Criar os componentes de cada pagina, mesmo que em brancos. OK
-4° Definir as cores do projeto.  (#25BDB1)
+4° Definir as cores do projeto. OK
+
+5° Escolher os icones do nosso menu.
+
+6° Criar o a tela de Natureza de Lancamento.
+    6.1 Criar a pagina principal.
+    6.2 Adicionar a tabela.
+    6.3 Adicionar o botão 'Adcionar natureza'.
+    6.4 Chamar o modal que vai cadastrar a natureza.
+    6.5 Colocar dentro do modal os campos e ações dos botões.
+
+
 
 
 
