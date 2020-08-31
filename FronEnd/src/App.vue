@@ -33,7 +33,9 @@ import Menu from '@/components/Menu.vue';
 </script>
 
 <style>
-
+/* html{
+  overflow-y: hidden;
+} */
 .v-btn.v-btn--contained{
   text-transform: none;
 }
