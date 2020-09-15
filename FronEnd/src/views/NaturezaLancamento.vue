@@ -5,7 +5,7 @@
         <v-card width="100%">
           <v-card-title>
            
-            <v-btn @click="dialog = !dialog" color="primary" dark>Adicionar natureza</v-btn>
+            <v-btn @click="adicinarNatureza()" color="primary" dark>Adicionar natureza</v-btn>
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -15,36 +15,59 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-data-table calculate-widths :headers="colunas" :items="naturezas" :search="search"></v-data-table>
+          <v-data-table 
+            calculate-widths 
+            :headers="colunas" 
+            :items="naturezas" 
+            :search="search"
+          >
+            <template v-slot:item.actions="{ item }">
+              <v-icon
+                small
+                class="mr-2"
+                @click="editarItem(item)"
+              >
+                mdi-pencil
+              </v-icon>
+
+              <v-icon
+                small
+                @click="deletarItem(item)"
+              >
+                mdi-delete
+              </v-icon>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
     </v-row>
 
     <v-row justify="center">
-      <v-dialog v-model="dialog" persistent max-width="850px">
+      <v-dialog v-model="dialog" persistent max-width="600px">
         <v-card>
           <v-card-title>
-            <span class="headline">Adicionar natureza</span>
+            <span class="headline"> {{ (natureza.id) ? 'Editar' : 'Adicionar' }} natureza</span>
           </v-card-title>
           <v-card-text>
             <v-container>
               <!--  aqui são os campos da natureza. -->
               <v-row>
-                <v-col cols="12" sm="12" md="2">
+                <v-col cols="12" sm="12" md="3">
                   <v-text-field label="Codigo" v-model="natureza.codigo"></v-text-field>
                 </v-col>
 
-                <v-col cols="12" sm="12" md="5">
+                <v-col cols="12" sm="12" md="9">
                   <v-text-field label="Nome" v-model="natureza.nome"></v-text-field>
                 </v-col>
-
+                
                 <v-col cols="12" sm="12" md="3">
+                  <v-select :items="['DEBITO', 'CREDITO']" label="Tipo" v-model="natureza.tipo"></v-select>
+                </v-col>
+
+                <v-col cols="12" sm="12" md="9">
                   <v-text-field label="Classificação" v-model="natureza.classificacao"></v-text-field>
                 </v-col>
 
-                <v-col cols="12" sm="12" md="2">
-                  <v-select :items="['DEBITO', 'CREDITO']" label="Tipo" v-model="natureza.tipo"></v-select>
-                </v-col>
 
              
               </v-row>
@@ -74,7 +97,7 @@ export default {
         { text: "Nome", value: "nome" },
         { text: "Tipo", value: "tipo" },
         { text: "Classificação", value: "classificacao" },
-        { text: "", sortable: false, value: "" },
+        { text: 'Actions', value: 'actions', sortable: false },
       ],
       naturezas: [],
       dialog: false,
@@ -95,14 +118,91 @@ export default {
   },
 
   methods:{
-    salvar(){
-      console.log(this.natureza);
 
-      if(this.natureza.modeloValido()){
-        alert('Aqui vou enviar a natureza para cadastrar no back end')
-      }else{
-      alert('Favor preencher os campos obrigatorios.')
+    adicinarNatureza(){
+      this.natureza = new NaturezaModel();
+      this.dialog = true;
+    },
+
+    editarItem(item){
+      this.natureza = new NaturezaModel(item);
+      this.dialog = true;
+    },
+
+    deletarItem(item){
+      if(confirm(`Deseja realmente deletar a natureza ${item.nome}?`)){
+        // Aqui vou salvar no back end
+        apiNatureza.deletar(item.id)
+        .then(() =>{
+          alert(`Natureza ${item.nome} foi deletada com sucesso!`);
+          this.removerNaturezaDaTabela(item);
+        })
       }
+    },
+
+    removerNaturezaDaTabela(natureza){
+      var index = this.naturezas.map(n => n.id).indexOf(natureza.id);
+
+      if(index < 0){
+        alert('Não foi possível deletar a natureza ' + natureza.nome);
+        return;
+      }
+
+      this.naturezas.splice(index, 1);
+
+    },
+
+    atualizarNaturezaDaTabela(naturezaAtualizada){
+      var index = this.naturezas.map(n => n.id).indexOf(naturezaAtualizada.id);
+
+      if(index < 0){
+        alert('Não foi possível deletar a natureza ' + naturezaAtualizada.nome);
+        return;
+      }
+
+      this.naturezas.splice(index, 1, naturezaAtualizada);
+
+    },
+    salvar(){
+
+      this.natureza.status = true;
+
+      if(!this.natureza.modeloValido()){
+        alert('Favor preencher os campos código, nome e tipo.');
+        return;
+      }
+
+      if(this.natureza.id){
+        apiNatureza.atualizar(this.natureza)
+         .then(() => {
+          alert(`Natureza ${this.natureza.nome} foi atualizada com sucesso!`);
+          this.atualizarNaturezaDaTabela(this.natureza);
+          this.dialog = false;
+
+        })
+        .catch(erro => {
+          console.log(erro);
+          alert('Não foi possivel cadastrar a natureza de lançamento.')
+        })
+
+      }else{
+        apiNatureza.cadastrar(this.natureza)
+        .then((response) => {
+          alert(`Natureza ${this.natureza.nome} foi cadastrada com sucesso!`);
+          this.naturezas.push(new NaturezaModel(response.data));
+          this.dialog = false;
+
+        })
+        .catch(erro => {
+          console.log(erro);
+          alert('Não foi possivel cadastrar a natureza de lançamento.')
+        })
+      }
+
+
+      
+
+
     }
   }
 };
