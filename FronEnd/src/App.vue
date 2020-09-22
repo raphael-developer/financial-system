@@ -1,10 +1,9 @@
 <template>
   <v-app >
-    <Menu/>
+    <Menu v-if="mostrarMenu" />
 
     <v-main>
-      <v-container
-      >
+      <v-container>
        <router-view/>
       </v-container>
     </v-main>
@@ -23,11 +22,15 @@ import Menu from '@/components/Menu.vue';
      components: {
       Menu
     },
-    data: () => ({
 
-    }),
-    created () {
-      
+    data(){
+      return  {
+        mostrarMenu: false
+      }
+    },
+
+    created () { 
+      this.mostrarMenu = (this.$route.name.toLowerCase() !== 'login');
     },
   }
 </script>

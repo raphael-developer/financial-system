@@ -1,11 +1,15 @@
 <template>
   <div>
     <!-- Menu lateral -->
-    <v-navigation-drawer v-model="drawer" app clipped>
+    <v-navigation-drawer color="rgb(32,32,36)" v-model="drawer" app clipped>
 
-      <v-list dense>
+      <v-list  dense>
 
-        <v-list-item color="primary" :to="rota.path" v-for="rota in listaDeRotas" :key="rota.name" link > 
+        <v-list-item color="primary" 
+        :to="rota.path" 
+        v-for="rota in listaDeRotas" 
+        :key="rota.name" link  
+        v-show="rota.meta.requiredAuth"> 
 
           <v-list-item-action>
             <v-icon>{{ rota.icon }}</v-icon>
