@@ -2,7 +2,7 @@
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="4">
       <v-card class="elevation-12">
-        <h2 class="logo">Login </h2>
+        <h2 class="logo">Login</h2>
 
         <v-card-text>
           <v-form>
@@ -12,7 +12,7 @@
               prepend-icon="mdi-account"
               type="email"
               v-model="email"
-            ></v-text-field>
+            />
 
             <v-text-field
               id="senha"
@@ -20,7 +20,7 @@
               name="password"
               prepend-icon="mdi-lock"
               type="password"
-            ></v-text-field>
+            />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -32,6 +32,7 @@
 </template>
 <script>
 export default {
+  name: "Login",
   data() {
     return {
       email: undefined,
@@ -49,4 +50,3 @@ export default {
   align-content: center;
 }
 </style>
-
